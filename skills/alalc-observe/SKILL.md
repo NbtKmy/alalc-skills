@@ -23,6 +23,8 @@ ALALC_HOME=/absolute/path/to/alalc-skills     # clone of the alalc-skills reposi
 
 If `ALALC_HOME` is unset, stop and ask the user to set it. Every command runs as `uv run --project "$ALALC_HOME" <command>`.
 
+If the user has no clone yet, offer to set it up: `git clone https://github.com/NbtKmy/alalc-skills.git <absolute path>` then `uv sync` inside it, and ask where to put it. Run these only after the user agrees, then ask them to set `ALALC_HOME` to that path.
+
 ## Input and output
 
 ```text

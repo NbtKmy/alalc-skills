@@ -15,7 +15,7 @@ The code is a Python package (`alalc_phase1`) run with [uv](https://docs.astral.
 ## Requirements
 
 - [uv](https://docs.astral.sh/uv/) and Python 3.13 or later (uv can install it)
-- A local UniDic-CWJ dictionary (not bundled; download it yourself)
+- A local UniDic-CWJ dictionary (not bundled; download it yourself, see [UniDic dictionary](#unidic-dictionary))
 - Claude Code or OpenCode
 
 ## Install
@@ -41,6 +41,30 @@ UNIDIC_PATH=/absolute/path/to/unidic-cwj-...
 UNIDIC_VERSION=...
 UNIDIC_NAME=unidic-cwj        # optional
 ```
+
+### UniDic dictionary
+
+The core analyzes text with MeCab and a UniDic dictionary. `uv sync` installs MeCab itself (the `mecab-python3` wheel), but **not the dictionary**: UniDic is not bundled and nothing downloads it for you.
+
+1. Download **UniDic-CWJ** (contemporary written Japanese) from NINJAL: <https://clrd.ninjal.ac.jp/unidic/>, and unzip it anywhere you like. Read its license first.
+2. The unzipped folder (for example `unidic-cwj-202512`) is the dictionary. It contains files such as `dicrc`, `sys.dic` and `matrix.bin`.
+3. Point the environment variables at **your** copy. The path differs for every user, so use an absolute path and do not use `~` (it is not expanded in `settings.local.json`):
+   - `UNIDIC_PATH`: the unzipped folder, e.g. `/path/to/dictionaries/unidic-cwj-202512`
+   - `UNIDIC_VERSION`: the version string of the dictionary, e.g. `202512` (the number in the folder name)
+   - `UNIDIC_NAME`: optional label, e.g. `unidic-cwj`
+
+   The values are recorded in every trace, so reviewers can see which dictionary produced a result. The project was developed with UniDic-CWJ 202512; other versions are untested.
+4. Check the setup:
+
+   ```bash
+   uv run --project "$ALALC_HOME" alalc-run-core --text 日本橋
+   ```
+
+   It prints the core's raw JSON. If it prints `Missing UniDic path` or `core failed: DictionaryNotFoundError`, the variables are not set or the path is wrong.
+
+Keep `.claude/settings.local.json` out of version control: it holds paths that are specific to your machine.
+
+If an AI agent installed the skills for you, it should ask you for the dictionary folder instead of guessing, and it will not download UniDic on its own.
 
 ## Use
 

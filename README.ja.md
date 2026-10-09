@@ -15,7 +15,7 @@
 ## 必要なもの
 
 - [uv](https://docs.astral.sh/uv/) と Python 3.13 以上（Python は uv が入れられます）
-- ローカルの UniDic-CWJ 辞書（同梱していません。各自で入手してください）
+- ローカルの UniDic-CWJ 辞書（同梱していません。各自で入手してください。[UniDic 辞書の準備](#unidic-辞書の準備)を参照）
 - Claude Code または OpenCode
 
 ## 導入
@@ -41,6 +41,30 @@ UNIDIC_PATH=/absolute/path/to/unidic-cwj-...
 UNIDIC_VERSION=...
 UNIDIC_NAME=unidic-cwj        # 任意
 ```
+
+### UniDic 辞書の準備
+
+core は MeCab と UniDic 辞書で解析します。`uv sync` で MeCab 本体（`mecab-python3` の wheel）は入りますが、**辞書は入りません**。UniDic は同梱しておらず、自動でダウンロードもしません。
+
+1. 国立国語研究所の配布ページ <https://clrd.ninjal.ac.jp/unidic/> から **UniDic-CWJ**（現代書き言葉）をダウンロードし、好きな場所に展開します。先にライセンスを確認してください。
+2. 展開したフォルダ（例: `unidic-cwj-202512`）が辞書です。中に `dicrc`、`sys.dic`、`matrix.bin` などが入っています。
+3. 環境変数を**自分の環境のパス**に合わせます。パスは人によって違うので、絶対パスで書いてください。`settings.local.json` では `~` は展開されないため使えません。
+   - `UNIDIC_PATH`: 展開したフォルダ。例: `/path/to/dictionaries/unidic-cwj-202512`
+   - `UNIDIC_VERSION`: 辞書のバージョン。例: `202512`（フォルダ名の数字）
+   - `UNIDIC_NAME`: 任意のラベル。例: `unidic-cwj`
+
+   これらの値は trace に記録されるので、どの辞書の結果かをレビュー時に確認できます。開発では UniDic-CWJ 202512 を使いました。ほかのバージョンは未検証です。
+4. 設定を確認します。
+
+   ```bash
+   uv run --project "$ALALC_HOME" alalc-run-core --text 日本橋
+   ```
+
+   core の生 JSON が表示されれば成功です。`Missing UniDic path` や `core failed: DictionaryNotFoundError` が出たら、環境変数が未設定かパスが違います。
+
+`.claude/settings.local.json` はバージョン管理に入れないでください。自分のマシン固有のパスが入ります。
+
+AI エージェントがスキルを導入した場合、エージェントは辞書の場所を推測せずにあなたへ尋ね、UniDic を勝手にダウンロードしません。
 
 ## 使い方
 

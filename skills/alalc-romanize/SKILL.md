@@ -102,6 +102,18 @@ If any required variable is unset, or the dictionary cannot be located, stop bef
 
 Record the actual dictionary version in downstream run metadata.
 
+## 1.1 Helping the user set up
+
+If `ALALC_HOME` is missing, or the user has no clone of `alalc-skills`: offer `git clone https://github.com/NbtKmy/alalc-skills.git <absolute path>` and `uv sync` inside it, and run them only after the user agrees on the location.
+
+If the dictionary is missing, explain and ask; do not search the disk for one and do not download one:
+
+1. UniDic-CWJ (contemporary written Japanese) is distributed by NINJAL at https://clrd.ninjal.ac.jp/unidic/ ; the user downloads and unzips it, after reading its license.
+2. `UNIDIC_PATH` is the unzipped folder (it contains `dicrc`, `sys.dic`, `matrix.bin`). Ask the user for its absolute path. `~` is not expanded in `settings.local.json`, so write the full path.
+3. `UNIDIC_VERSION` is the dictionary version, normally the number in the folder name (for example `202512` for `unidic-cwj-202512`). If it is unclear, ask.
+4. Show the user the three variables to set. Write them to `.claude/settings.local.json` (`env` block) only if the user agrees, and never commit that file.
+5. Verify with `uv run --project "$ALALC_HOME" alalc-run-core --text 日本橋`. The core's raw JSON means success. `Missing UniDic path` or `DictionaryNotFoundError` means the variables or the path are wrong; tell the user and stop.
+
 ---
 
 # 2. Accepted input

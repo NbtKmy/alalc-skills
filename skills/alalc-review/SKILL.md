@@ -21,6 +21,8 @@ ALALC_HOME=/absolute/path/to/alalc-skills     # clone of the alalc-skills reposi
 
 If `ALALC_HOME` is unset, stop and ask the user to set it. Every command runs as `uv run --project "$ALALC_HOME" <command>`.
 
+If the user has no clone yet, offer to set it up: `git clone https://github.com/NbtKmy/alalc-skills.git <absolute path>` then `uv sync` inside it, and ask where to put it. Run these only after the user agrees, then ask them to set `ALALC_HOME` to that path.
+
 ## Workflow
 
 1. **Ask for the reviewer name once**, at the start. Use the string exactly as given. Never guess or fill it in. Then tell the user once that they may consult actual materials (the book, the catalog record, a reference work) while reviewing, because the record shows only the input text and the AI's reasoning, and a reading often depends on the item itself. Do not ask them to look anything up for you, and do not treat a missing source as a problem; their answers and comments are the data.
