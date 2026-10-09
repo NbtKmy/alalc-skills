@@ -1,0 +1,351 @@
+{
+  "trace_version": "alalc-romanization-trace/0.1.0",
+  "case_id": "B20261009-002-0002",
+  "input": {
+    "kind": "date",
+    "context_before": null,
+    "context_after": null,
+    "item_supplied_reading": null,
+    "notes": null,
+    "metadata": {},
+    "text": "昭和二十年三月十日"
+  },
+  "core_result": {
+    "output": "Shōwa nijū nen san gatsu tō ka",
+    "raw": {
+      "json_schema_version": "1",
+      "text": "昭和二十年三月十日",
+      "romanized_text": "Shōwa nijū nen san gatsu tō ka",
+      "romanization_scheme": {
+        "name": "modified_hepburn",
+        "version": "1"
+      },
+      "analyzer": {
+        "name": "mecab",
+        "version": "0.996",
+        "dictionary": {
+          "name": "unidic-cwj",
+          "version": "202512",
+          "schema_id": "unidic-cwj-202512-29"
+        }
+      },
+      "tokens": [
+        {
+          "id": "t0",
+          "surface": "昭和",
+          "start": 0,
+          "end": 2,
+          "is_unknown": false,
+          "lemma": "昭和",
+          "lemma_reading": "ショウワ",
+          "pos": [
+            "名詞",
+            "固有名詞",
+            "一般"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "昭和",
+          "kana": "ショウワ",
+          "pronunciation": "ショーワ",
+          "form": "ショウワ",
+          "form_base": "ショウワ",
+          "word_type": "固",
+          "romanization": {
+            "romaji": "shōwa",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t1",
+          "surface": "二十",
+          "start": 2,
+          "end": 4,
+          "is_unknown": false,
+          "lemma": "二十",
+          "lemma_reading": "ニジュウ",
+          "pos": [
+            "名詞",
+            "数詞"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "二十",
+          "kana": "ニジュウ",
+          "pronunciation": "ニジュー",
+          "form": "ニジュウ",
+          "form_base": "ニジュウ",
+          "word_type": "漢",
+          "romanization": {
+            "romaji": "nijū",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t2",
+          "surface": "年",
+          "start": 4,
+          "end": 5,
+          "is_unknown": false,
+          "lemma": "年",
+          "lemma_reading": "ネン",
+          "pos": [
+            "名詞",
+            "普通名詞",
+            "助数詞可能"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "年",
+          "kana": "ネン",
+          "pronunciation": "ネン",
+          "form": "ネン",
+          "form_base": "ネン",
+          "word_type": "漢",
+          "romanization": {
+            "romaji": "nen",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t3",
+          "surface": "三",
+          "start": 5,
+          "end": 6,
+          "is_unknown": false,
+          "lemma": "三",
+          "lemma_reading": "サン",
+          "pos": [
+            "名詞",
+            "数詞"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "三",
+          "kana": "サン",
+          "pronunciation": "サン",
+          "form": "サン",
+          "form_base": "サン",
+          "word_type": "漢",
+          "romanization": {
+            "romaji": "san",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t4",
+          "surface": "月",
+          "start": 6,
+          "end": 7,
+          "is_unknown": false,
+          "lemma": "月",
+          "lemma_reading": "ガツ",
+          "pos": [
+            "名詞",
+            "普通名詞",
+            "助数詞可能"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "月",
+          "kana": "ガツ",
+          "pronunciation": "ガツ",
+          "form": "ガツ",
+          "form_base": "ガツ",
+          "word_type": "漢",
+          "romanization": {
+            "romaji": "gatsu",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t5",
+          "surface": "十",
+          "start": 7,
+          "end": 8,
+          "is_unknown": false,
+          "lemma": "十",
+          "lemma_reading": "トオ",
+          "pos": [
+            "名詞",
+            "数詞"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "十",
+          "kana": "トオ",
+          "pronunciation": "トー",
+          "form": "トオ",
+          "form_base": "トオ",
+          "word_type": "和",
+          "romanization": {
+            "romaji": "tō",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t6",
+          "surface": "日",
+          "start": 8,
+          "end": 9,
+          "is_unknown": false,
+          "lemma": "日",
+          "lemma_reading": "カ",
+          "pos": [
+            "接尾辞",
+            "名詞的",
+            "助数詞"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "日",
+          "kana": "カ",
+          "pronunciation": "カ",
+          "form": "カ",
+          "form_base": "カ",
+          "word_type": "和",
+          "romanization": {
+            "romaji": "ka",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        }
+      ]
+    }
+  },
+  "alalc_result": {
+    "proposed_output": "Shōwa 20-nen 3-gatsu tōka",
+    "variants": [],
+    "core_output_accepted_without_change": false
+  },
+  "decisions": [
+    {
+      "decision_id": "d1",
+      "type": "numerals",
+      "action": "changed",
+      "target": {
+        "text": "二十年",
+        "start": 2,
+        "end": 5
+      },
+      "before": "nijū nen",
+      "after": "20-nen",
+      "candidates": [
+        {
+          "output": "20-nen",
+          "rule": "ALA-LC-7.1.2"
+        }
+      ],
+      "rule_evaluations": [
+        {
+          "rule": "ALA-LC-7.1.2",
+          "result": "applied"
+        },
+        {
+          "rule": "ALA-LC-7.1.1",
+          "result": "applied"
+        },
+        {
+          "rule": "ALA-LC-7.2.1",
+          "result": "considered_not_applied"
+        },
+        {
+          "rule": "ALA-LC-7.3",
+          "result": "not_applicable"
+        }
+      ],
+      "reason": "kind=date で、固有名詞に不可分の数詞でも普通名詞の一部でもないため、§7.1.2 により Arabic 数字に変換し、数詞と助数詞を §7.1.1 のハイフンで結ぶ(例: Heisei 7-nen)。",
+      "confidence": 0.9,
+      "information_used": [
+        "input.kind",
+        "core.tokens[1].pos",
+        "core.tokens[2].pos"
+      ],
+      "external_references": []
+    },
+    {
+      "decision_id": "d2",
+      "type": "numerals",
+      "action": "changed",
+      "target": {
+        "text": "三月",
+        "start": 5,
+        "end": 7
+      },
+      "before": "san gatsu",
+      "after": "3-gatsu",
+      "candidates": [
+        {
+          "output": "3-gatsu",
+          "rule": "ALA-LC-7.1.2"
+        }
+      ],
+      "rule_evaluations": [
+        {
+          "rule": "ALA-LC-7.1.2",
+          "result": "applied"
+        },
+        {
+          "rule": "ALA-LC-7.1.1",
+          "result": "applied"
+        },
+        {
+          "rule": "ALA-LC-7.3",
+          "result": "considered_not_applied"
+        }
+      ],
+      "reason": "月名の日付表現で lexicalized な普通名詞ではないため Arabic 数字に変換(例: 8-gatsudo hōkokusho)。助数詞 gatsu は core の読みを維持。",
+      "confidence": 0.85,
+      "information_used": [
+        "input.kind",
+        "core.tokens[3].pos",
+        "core.tokens[4].kana"
+      ],
+      "external_references": []
+    },
+    {
+      "decision_id": "d3",
+      "type": "numerals",
+      "action": "changed",
+      "target": {
+        "text": "十日",
+        "start": 7,
+        "end": 9
+      },
+      "before": "tō ka",
+      "after": "tōka",
+      "candidates": [
+        {
+          "output": "tōka",
+          "rule": "ALA-LC-7.4.2"
+        }
+      ],
+      "rule_evaluations": [
+        {
+          "rule": "ALA-LC-7.4.2",
+          "result": "applied"
+        },
+        {
+          "rule": "ALA-LC-7.1.2",
+          "result": "considered_not_applied"
+        }
+      ],
+      "reason": "§7.4.2 の表が 十日 → tōka(一語の customary native reading)を明示するため、§7.1.2 の Arabic 変換より表を優先し、core の分割 tō ka を一語に直す(project policy P2)。表に variant の記載はない。",
+      "confidence": 0.85,
+      "information_used": [
+        "core.tokens[5].kana",
+        "core.tokens[6].kana",
+        "core.tokens[6].pos",
+        "rules/12_numerals.md §7.4.2 table"
+      ],
+      "external_references": []
+    }
+  ],
+  "unresolved": []
+}

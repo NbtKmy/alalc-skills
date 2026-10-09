@@ -1,0 +1,136 @@
+{
+  "trace_version": "alalc-romanization-trace/0.1.0",
+  "case_id": "B20261009-002-0004",
+  "input": {
+    "kind": "unknown",
+    "context_before": null,
+    "context_after": null,
+    "item_supplied_reading": null,
+    "notes": null,
+    "metadata": {},
+    "text": "非常識"
+  },
+  "core_result": {
+    "output": "Hi jōshiki",
+    "raw": {
+      "json_schema_version": "1",
+      "text": "非常識",
+      "romanized_text": "Hi jōshiki",
+      "romanization_scheme": {
+        "name": "modified_hepburn",
+        "version": "1"
+      },
+      "analyzer": {
+        "name": "mecab",
+        "version": "0.996",
+        "dictionary": {
+          "name": "unidic-cwj",
+          "version": "202512",
+          "schema_id": "unidic-cwj-202512-29"
+        }
+      },
+      "tokens": [
+        {
+          "id": "t0",
+          "surface": "非",
+          "start": 0,
+          "end": 1,
+          "is_unknown": false,
+          "lemma": "非",
+          "lemma_reading": "ヒ",
+          "pos": [
+            "接頭辞"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "非",
+          "kana": "ヒ",
+          "pronunciation": "ヒ",
+          "form": "ヒ",
+          "form_base": "ヒ",
+          "word_type": "漢",
+          "romanization": {
+            "romaji": "hi",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t1",
+          "surface": "常識",
+          "start": 1,
+          "end": 3,
+          "is_unknown": false,
+          "lemma": "常識",
+          "lemma_reading": "ジョウシキ",
+          "pos": [
+            "名詞",
+            "普通名詞",
+            "一般"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "常識",
+          "kana": "ジョウシキ",
+          "pronunciation": "ジョーシキ",
+          "form": "ジョウシキ",
+          "form_base": "ジョウシキ",
+          "word_type": "漢",
+          "romanization": {
+            "romaji": "jōshiki",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        }
+      ]
+    }
+  },
+  "alalc_result": {
+    "proposed_output": "Hijōshiki",
+    "variants": [],
+    "core_output_accepted_without_change": false
+  },
+  "decisions": [
+    {
+      "decision_id": "d1",
+      "type": "word_division",
+      "action": "changed",
+      "target": {
+        "text": "非常識",
+        "start": 0,
+        "end": 3
+      },
+      "before": "Hi jōshiki",
+      "after": "Hijōshiki",
+      "candidates": [
+        {
+          "output": "Hijōshiki",
+          "rule": "ALA-LC-6.5.1.2"
+        },
+        {
+          "output": "Hi jōshiki",
+          "rule": "ALA-LC-6.5.2.1"
+        }
+      ],
+      "rule_evaluations": [
+        {
+          "rule": "ALA-LC-6.5.1.2",
+          "result": "applied"
+        },
+        {
+          "rule": "ALA-LC-6.5.2.1",
+          "result": "considered_not_applied"
+        }
+      ],
+      "reason": "接頭辞「非」を切り離すと「常識でない」という意味が伝わらないため、§6.5.1.2 に従い一語で書く(同節に hijōshiki が例示されている)。",
+      "confidence": 0.9,
+      "information_used": [
+        "core.tokens[0].pos",
+        "core.tokens[1].pos",
+        "rules/07_prefixes_suffixes.md §6.5.1.2 example"
+      ],
+      "external_references": []
+    }
+  ],
+  "unresolved": []
+}

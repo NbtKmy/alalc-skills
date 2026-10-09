@@ -1,0 +1,170 @@
+{
+  "trace_version": "alalc-romanization-trace/0.1.0",
+  "case_id": "B20261009-002-0006",
+  "input": {
+    "kind": "unknown",
+    "context_before": null,
+    "context_after": null,
+    "item_supplied_reading": null,
+    "notes": null,
+    "metadata": {},
+    "text": "東京都民"
+  },
+  "core_result": {
+    "output": "Tōkyō to min",
+    "raw": {
+      "json_schema_version": "1",
+      "text": "東京都民",
+      "romanized_text": "Tōkyō to min",
+      "romanization_scheme": {
+        "name": "modified_hepburn",
+        "version": "1"
+      },
+      "analyzer": {
+        "name": "mecab",
+        "version": "0.996",
+        "dictionary": {
+          "name": "unidic-cwj",
+          "version": "202512",
+          "schema_id": "unidic-cwj-202512-29"
+        }
+      },
+      "tokens": [
+        {
+          "id": "t0",
+          "surface": "東京",
+          "start": 0,
+          "end": 2,
+          "is_unknown": false,
+          "lemma": "トウキョウ",
+          "lemma_reading": "トウキョウ",
+          "pos": [
+            "名詞",
+            "固有名詞",
+            "地名",
+            "一般"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "東京",
+          "kana": "トウキョウ",
+          "pronunciation": "トーキョー",
+          "form": "トウキョウ",
+          "form_base": "トウキョウ",
+          "word_type": "固",
+          "romanization": {
+            "romaji": "tōkyō",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t1",
+          "surface": "都",
+          "start": 2,
+          "end": 3,
+          "is_unknown": false,
+          "lemma": "都",
+          "lemma_reading": "ト",
+          "pos": [
+            "名詞",
+            "普通名詞",
+            "一般"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "都",
+          "kana": "ト",
+          "pronunciation": "ト",
+          "form": "ト",
+          "form_base": "ト",
+          "word_type": "漢",
+          "romanization": {
+            "romaji": "to",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t2",
+          "surface": "民",
+          "start": 3,
+          "end": 4,
+          "is_unknown": false,
+          "lemma": "民",
+          "lemma_reading": "ミン",
+          "pos": [
+            "接尾辞",
+            "名詞的",
+            "一般"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "民",
+          "kana": "ミン",
+          "pronunciation": "ミン",
+          "form": "ミン",
+          "form_base": "ミン",
+          "word_type": "漢",
+          "romanization": {
+            "romaji": "min",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        }
+      ]
+    }
+  },
+  "alalc_result": {
+    "proposed_output": "Tōkyō tomin",
+    "variants": [],
+    "core_output_accepted_without_change": false
+  },
+  "decisions": [
+    {
+      "decision_id": "d1",
+      "type": "word_division",
+      "action": "changed",
+      "target": {
+        "text": "都民",
+        "start": 2,
+        "end": 4
+      },
+      "before": "to min",
+      "after": "tomin",
+      "candidates": [
+        {
+          "output": "tomin",
+          "rule": "ALA-LC-6.10.2"
+        },
+        {
+          "output": "to min",
+          "rule": "ALA-LC-6.4"
+        }
+      ],
+      "rule_evaluations": [
+        {
+          "rule": "ALA-LC-6.10.2",
+          "result": "applied"
+        },
+        {
+          "rule": "ALA-LC-6.6.1",
+          "result": "applied"
+        },
+        {
+          "rule": "ALA-LC-6.10.1",
+          "result": "considered_not_applied"
+        }
+      ],
+      "reason": "「都民」は jurisdiction 名の接尾辞 -to ではなく 都+民 の複合語(東京の住民)であり、§6.10.2 の例(東京都民 → Tōkyō tomin)どおり地名要素 Tōkyō とは分け、都民は §6.6.1 で一語にする。",
+      "confidence": 0.9,
+      "information_used": [
+        "core.tokens[1].pos",
+        "core.tokens[2].pos",
+        "rules/11_geographic_names.md §6.10.2 example"
+      ],
+      "external_references": []
+    }
+  ],
+  "unresolved": []
+}

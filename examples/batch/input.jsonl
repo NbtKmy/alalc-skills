@@ -1,0 +1,6 @@
+{"id":"B20261009-002-0001","text":"私は学校へ行きました","kind":"sentence"}
+{"id":"B20261009-002-0002","text":"昭和二十年三月十日","kind":"date"}
+{"id":"B20261009-002-0003","text":"美しい花","kind":"phrase"}
+{"id":"B20261009-002-0004","text":"非常識","kind":"unknown"}
+{"id":"B20261009-002-0005","text":"日本橋","kind":"geographic_name","item_supplied_reading":"にっぽんばし","notes":"test: item-supplied reading differs from the core reading (Nihonbashi)"}
+{"id":"B20261009-002-0006","text":"東京都民","kind":"unknown"}

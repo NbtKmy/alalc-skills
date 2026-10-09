@@ -1,0 +1,96 @@
+{
+  "trace_version": "alalc-romanization-trace/0.1.0",
+  "case_id": "B20261009-002-0003",
+  "input": {
+    "kind": "phrase",
+    "context_before": null,
+    "context_after": null,
+    "item_supplied_reading": null,
+    "notes": null,
+    "metadata": {},
+    "text": "美しい花"
+  },
+  "core_result": {
+    "output": "Utsukushii hana",
+    "raw": {
+      "json_schema_version": "1",
+      "text": "美しい花",
+      "romanized_text": "Utsukushii hana",
+      "romanization_scheme": {
+        "name": "modified_hepburn",
+        "version": "1"
+      },
+      "analyzer": {
+        "name": "mecab",
+        "version": "0.996",
+        "dictionary": {
+          "name": "unidic-cwj",
+          "version": "202512",
+          "schema_id": "unidic-cwj-202512-29"
+        }
+      },
+      "tokens": [
+        {
+          "id": "t0",
+          "surface": "美しい",
+          "start": 0,
+          "end": 3,
+          "is_unknown": false,
+          "lemma": "美しい",
+          "lemma_reading": "ウツクシイ",
+          "pos": [
+            "形容詞",
+            "一般"
+          ],
+          "conjugation_type": "形容詞",
+          "conjugation_form": "連体形-一般",
+          "orth": "美しい",
+          "kana": "ウツクシイ",
+          "pronunciation": "ウツクシー",
+          "form": "ウツクシイ",
+          "form_base": "ウツクシイ",
+          "word_type": "和",
+          "romanization": {
+            "romaji": "utsukushii",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t1",
+          "surface": "花",
+          "start": 3,
+          "end": 4,
+          "is_unknown": false,
+          "lemma": "花",
+          "lemma_reading": "ハナ",
+          "pos": [
+            "名詞",
+            "普通名詞",
+            "一般"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "花",
+          "kana": "ハナ",
+          "pronunciation": "ハナ",
+          "form": "ハナ",
+          "form_base": "ハナ",
+          "word_type": "和",
+          "romanization": {
+            "romaji": "hana",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        }
+      ]
+    }
+  },
+  "alalc_result": {
+    "proposed_output": "Utsukushii hana",
+    "variants": [],
+    "core_output_accepted_without_change": true
+  },
+  "decisions": [],
+  "unresolved": []
+}

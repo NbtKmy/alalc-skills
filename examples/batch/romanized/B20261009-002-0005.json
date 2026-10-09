@@ -1,0 +1,228 @@
+{
+  "trace_version": "alalc-romanization-trace/0.1.0",
+  "case_id": "B20261009-002-0005",
+  "input": {
+    "kind": "geographic_name",
+    "context_before": null,
+    "context_after": null,
+    "item_supplied_reading": "にっぽんばし",
+    "notes": "test: item-supplied reading differs from the core reading (Nihonbashi)",
+    "metadata": {},
+    "text": "日本橋"
+  },
+  "core_result": {
+    "output": "Nihonbashi",
+    "raw": {
+      "json_schema_version": "1",
+      "text": "日本橋",
+      "romanized_text": "Nihonbashi",
+      "romanization_scheme": {
+        "name": "modified_hepburn",
+        "version": "1"
+      },
+      "analyzer": {
+        "name": "mecab",
+        "version": "0.996",
+        "dictionary": {
+          "name": "unidic-cwj",
+          "version": "202512",
+          "schema_id": "unidic-cwj-202512-29"
+        }
+      },
+      "tokens": [
+        {
+          "id": "t0",
+          "surface": "日本橋",
+          "start": 0,
+          "end": 3,
+          "is_unknown": false,
+          "lemma": "ニホンバシ",
+          "lemma_reading": "ニホンバシ",
+          "pos": [
+            "名詞",
+            "固有名詞",
+            "地名",
+            "一般"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "日本橋",
+          "kana": "ニホンバシ",
+          "pronunciation": "ニホンバシ",
+          "form": "ニホンバシ",
+          "form_base": "ニホンバシ",
+          "word_type": "固",
+          "romanization": {
+            "romaji": "nihonbashi",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        }
+      ]
+    },
+    "reading_raw": {
+      "json_schema_version": "1",
+      "text": "にっぽんばし",
+      "romanized_text": "Nippon bashi",
+      "romanization_scheme": {
+        "name": "modified_hepburn",
+        "version": "1"
+      },
+      "analyzer": {
+        "name": "mecab",
+        "version": "0.996",
+        "dictionary": {
+          "name": "unidic-cwj",
+          "version": "202512",
+          "schema_id": "unidic-cwj-202512-29"
+        }
+      },
+      "tokens": [
+        {
+          "id": "t0",
+          "surface": "にっぽん",
+          "start": 0,
+          "end": 4,
+          "is_unknown": false,
+          "lemma": "日本",
+          "lemma_reading": "ニッポン",
+          "pos": [
+            "名詞",
+            "固有名詞",
+            "地名",
+            "国"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "にっぽん",
+          "kana": "ニッポン",
+          "pronunciation": "ニッポン",
+          "form": "ニッポン",
+          "form_base": "ニッポン",
+          "word_type": "固",
+          "romanization": {
+            "romaji": "nippon",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t1",
+          "surface": "ばし",
+          "start": 4,
+          "end": 6,
+          "is_unknown": false,
+          "lemma": "橋",
+          "lemma_reading": "ハシ",
+          "pos": [
+            "名詞",
+            "普通名詞",
+            "一般"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "ばし",
+          "kana": "バシ",
+          "pronunciation": "バシ",
+          "form": "バシ",
+          "form_base": "ハシ",
+          "word_type": "和",
+          "romanization": {
+            "romaji": "bashi",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        }
+      ]
+    }
+  },
+  "alalc_result": {
+    "proposed_output": "Nipponbashi",
+    "variants": [
+      {
+        "output": "Nihonbashi",
+        "rule": "ALA-LC-2.2"
+      }
+    ],
+    "core_output_accepted_without_change": false
+  },
+  "decisions": [
+    {
+      "decision_id": "d1",
+      "type": "reading_selection",
+      "action": "changed",
+      "target": {
+        "text": "日本橋",
+        "start": 0,
+        "end": 3
+      },
+      "before": "Nihonbashi",
+      "after": "Nipponbashi",
+      "candidates": [
+        {
+          "output": "Nipponbashi",
+          "rule": "ALA-LC-2.2"
+        },
+        {
+          "output": "Nihonbashi",
+          "rule": "ALA-LC-2.2"
+        }
+      ],
+      "rule_evaluations": [
+        {
+          "rule": "ALA-LC-2.2",
+          "result": "applied"
+        },
+        {
+          "rule": "ALA-LC-6.10.7",
+          "result": "applied"
+        },
+        {
+          "rule": "ALA-LC-6.10.1",
+          "result": "considered_not_applied"
+        }
+      ],
+      "reason": "item-supplied reading「にっぽんばし」があるため最優先で採用し、core の ニホンバシ(Nihonbashi)から変更する。当該 reading を core で字訳すると nippon + bashi で、generic term「橋」は地物名の一部として §6.10.7 により一語に結ぶ(jurisdiction 型のハイフンは入れない)。",
+      "confidence": 0.9,
+      "information_used": [
+        "input.item_supplied_reading",
+        "input.notes",
+        "core.tokens[0].kana",
+        "core run_core.py --text にっぽんばし → Nippon bashi"
+      ],
+      "external_references": []
+    },
+    {
+      "decision_id": "d2",
+      "type": "reading_selection",
+      "action": "variant_added",
+      "target": {
+        "text": "日本橋",
+        "start": 0,
+        "end": 3
+      },
+      "before": "Nipponbashi",
+      "after": "Nihonbashi",
+      "candidates": [
+        {
+          "output": "Nihonbashi",
+          "rule": "ALA-LC-2.2"
+        }
+      ],
+      "rule_evaluations": [
+        {
+          "rule": "ALA-LC-2.2",
+          "result": "applied"
+        }
+      ],
+      "reason": "core/UniDic の標準読み Nihonbashi を、§2.2 の「supported alternative は variant として保持できる」に基づき variant として残す。item の読みが優先であり、これは補助的なアクセス形。",
+      "confidence": 0.7,
+      "information_used": [
+        "core.tokens[0].kana",
+        "rules/01_reading_selection.md §2.2"
+      ],
+      "external_references": []
+    }
+  ],
+  "unresolved": []
+}

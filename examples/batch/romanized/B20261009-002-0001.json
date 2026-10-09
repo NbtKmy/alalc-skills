@@ -1,0 +1,340 @@
+{
+  "trace_version": "alalc-romanization-trace/0.1.0",
+  "case_id": "B20261009-002-0001",
+  "input": {
+    "kind": "sentence",
+    "context_before": null,
+    "context_after": null,
+    "item_supplied_reading": null,
+    "notes": null,
+    "metadata": {},
+    "text": "私は学校へ行きました"
+  },
+  "core_result": {
+    "output": "Watashi wa gakkō e iki mashi ta",
+    "raw": {
+      "json_schema_version": "1",
+      "text": "私は学校へ行きました",
+      "romanized_text": "Watashi wa gakkō e iki mashi ta",
+      "romanization_scheme": {
+        "name": "modified_hepburn",
+        "version": "1"
+      },
+      "analyzer": {
+        "name": "mecab",
+        "version": "0.996",
+        "dictionary": {
+          "name": "unidic-cwj",
+          "version": "202512",
+          "schema_id": "unidic-cwj-202512-29"
+        }
+      },
+      "tokens": [
+        {
+          "id": "t0",
+          "surface": "私",
+          "start": 0,
+          "end": 1,
+          "is_unknown": false,
+          "lemma": "私",
+          "lemma_reading": "ワタシ",
+          "pos": [
+            "代名詞"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "私",
+          "kana": "ワタシ",
+          "pronunciation": "ワタシ",
+          "form": "ワタシ",
+          "form_base": "ワタシ",
+          "word_type": "和",
+          "romanization": {
+            "romaji": "watashi",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t1",
+          "surface": "は",
+          "start": 1,
+          "end": 2,
+          "is_unknown": false,
+          "lemma": "は",
+          "lemma_reading": "ハ",
+          "pos": [
+            "助詞",
+            "係助詞"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "は",
+          "kana": "ハ",
+          "pronunciation": "ワ",
+          "form": "ハ",
+          "form_base": "ハ",
+          "word_type": "和",
+          "romanization": {
+            "romaji": "wa",
+            "source": "pronunciation",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t2",
+          "surface": "学校",
+          "start": 2,
+          "end": 4,
+          "is_unknown": false,
+          "lemma": "学校",
+          "lemma_reading": "ガッコウ",
+          "pos": [
+            "名詞",
+            "普通名詞",
+            "一般"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "学校",
+          "kana": "ガッコウ",
+          "pronunciation": "ガッコー",
+          "form": "ガッコウ",
+          "form_base": "ガッコウ",
+          "word_type": "漢",
+          "romanization": {
+            "romaji": "gakkō",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t3",
+          "surface": "へ",
+          "start": 4,
+          "end": 5,
+          "is_unknown": false,
+          "lemma": "へ",
+          "lemma_reading": "ヘ",
+          "pos": [
+            "助詞",
+            "格助詞"
+          ],
+          "conjugation_type": null,
+          "conjugation_form": null,
+          "orth": "へ",
+          "kana": "ヘ",
+          "pronunciation": "エ",
+          "form": "ヘ",
+          "form_base": "ヘ",
+          "word_type": "和",
+          "romanization": {
+            "romaji": "e",
+            "source": "pronunciation",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t4",
+          "surface": "行き",
+          "start": 5,
+          "end": 7,
+          "is_unknown": false,
+          "lemma": "行く",
+          "lemma_reading": "イク",
+          "pos": [
+            "動詞",
+            "非自立可能"
+          ],
+          "conjugation_type": "五段-カ行",
+          "conjugation_form": "連用形-一般",
+          "orth": "行き",
+          "kana": "イキ",
+          "pronunciation": "イキ",
+          "form": "イキ",
+          "form_base": "イク",
+          "word_type": "和",
+          "romanization": {
+            "romaji": "iki",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t5",
+          "surface": "まし",
+          "start": 7,
+          "end": 9,
+          "is_unknown": false,
+          "lemma": "ます",
+          "lemma_reading": "マス",
+          "pos": [
+            "助動詞"
+          ],
+          "conjugation_type": "助動詞-マス",
+          "conjugation_form": "連用形-一般",
+          "orth": "まし",
+          "kana": "マシ",
+          "pronunciation": "マシ",
+          "form": "マシ",
+          "form_base": "マス",
+          "word_type": "和",
+          "romanization": {
+            "romaji": "mashi",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        },
+        {
+          "id": "t6",
+          "surface": "た",
+          "start": 9,
+          "end": 10,
+          "is_unknown": false,
+          "lemma": "た",
+          "lemma_reading": "タ",
+          "pos": [
+            "助動詞"
+          ],
+          "conjugation_type": "助動詞-タ",
+          "conjugation_form": "終止形-一般",
+          "orth": "た",
+          "kana": "タ",
+          "pronunciation": "タ",
+          "form": "タ",
+          "form_base": "タ",
+          "word_type": "和",
+          "romanization": {
+            "romaji": "ta",
+            "source": "kana",
+            "fuses_with_next": false
+          }
+        }
+      ]
+    }
+  },
+  "alalc_result": {
+    "proposed_output": "Watakushi wa gakkō e ikimashita",
+    "variants": [
+      {
+        "output": "Watashi wa gakkō e ikimashita",
+        "rule": "ALA-LC-2.2"
+      }
+    ],
+    "core_output_accepted_without_change": false
+  },
+  "decisions": [
+    {
+      "decision_id": "d1",
+      "type": "reading_selection",
+      "action": "changed",
+      "target": {
+        "text": "私",
+        "start": 0,
+        "end": 1
+      },
+      "before": "Watashi",
+      "after": "Watakushi",
+      "candidates": [
+        {
+          "output": "Watakushi",
+          "rule": "ALA-LC-2.2"
+        },
+        {
+          "output": "Watashi",
+          "rule": "ALA-LC-2.2"
+        }
+      ],
+      "rule_evaluations": [
+        {
+          "rule": "ALA-LC-2.2",
+          "result": "applied"
+        }
+      ],
+      "reason": "item-supplied reading がなく、rules/01 §2.2 の表が 私 の preferred を watakushi と明示するため、core の ワタシ(watashi)から変更する(project policy P2)。",
+      "confidence": 0.9,
+      "information_used": [
+        "core.tokens[0].kana",
+        "input.item_supplied_reading",
+        "rules/01_reading_selection.md §2.2 table"
+      ],
+      "external_references": []
+    },
+    {
+      "decision_id": "d2",
+      "type": "reading_selection",
+      "action": "variant_added",
+      "target": {
+        "text": "私",
+        "start": 0,
+        "end": 1
+      },
+      "before": "Watakushi",
+      "after": "Watashi",
+      "candidates": [
+        {
+          "output": "Watashi",
+          "rule": "ALA-LC-2.2"
+        }
+      ],
+      "rule_evaluations": [
+        {
+          "rule": "ALA-LC-2.2",
+          "result": "applied"
+        }
+      ],
+      "reason": "§2.2 の表が suggested variant として watashi を示すため、preferred を置換せず variant として保持。",
+      "confidence": 0.9,
+      "information_used": [
+        "rules/01_reading_selection.md §2.2 table"
+      ],
+      "external_references": []
+    },
+    {
+      "decision_id": "d3",
+      "type": "word_division",
+      "action": "changed",
+      "target": {
+        "text": "行きました",
+        "start": 5,
+        "end": 10
+      },
+      "before": "iki mashi ta",
+      "after": "ikimashita",
+      "candidates": [
+        {
+          "output": "ikimashita",
+          "rule": "ALA-LC-6.8.1.1"
+        },
+        {
+          "output": "iki mashi ta",
+          "rule": "ALA-LC-6.8.1.3"
+        }
+      ],
+      "rule_evaluations": [
+        {
+          "rule": "ALA-LC-6.8.1.1",
+          "result": "applied"
+        },
+        {
+          "rule": "ALA-LC-6.8.1.3",
+          "result": "considered_not_applied"
+        },
+        {
+          "rule": "ALA-LC-6.8.1.2",
+          "result": "not_applicable"
+        }
+      ],
+      "reason": "動詞「行く」連用形に丁寧の助動詞「ます」と過去の「た」が連なる活用形で、補助動詞・可能/敬語の独立要素ではないため、§6.8.1.1 により一語で書く(例: ikimasu)。",
+      "confidence": 0.9,
+      "information_used": [
+        "core.tokens[4].pos",
+        "core.tokens[4].conjugation_form",
+        "core.tokens[5].pos",
+        "core.tokens[6].pos"
+      ],
+      "external_references": []
+    }
+  ],
+  "unresolved": []
+}
