@@ -57,7 +57,7 @@ def _write_inputs(tmp_path, trace):
 def test_assemble_trace_writes_the_example_trace(tmp_path):
     trace = load_trace("0001")
     files = _write_inputs(tmp_path, trace)
-    out = tmp_path / "out" / "t.json"
+    out = tmp_path / "out" / f"{trace['case_id']}.json"
     rc = cli.assemble_trace(
         ["--case", str(files["case"]), "--core-raw", str(files["raw"]),
          "--judgment", str(files["judgment"]), "--out", str(out)]
@@ -71,7 +71,7 @@ def test_assemble_trace_with_item_supplied_reading(tmp_path):
     files = _write_inputs(tmp_path, trace)
     reading = tmp_path / "reading.json"
     reading.write_text(json.dumps(trace["core_result"]["reading_raw"], ensure_ascii=False), encoding="utf-8")
-    out = tmp_path / "t.json"
+    out = tmp_path / f"{trace['case_id']}.json"
     rc = cli.assemble_trace(
         ["--case", str(files["case"]), "--core-raw", str(files["raw"]),
          "--reading-raw", str(reading), "--judgment", str(files["judgment"]), "--out", str(out)]
@@ -105,3 +105,20 @@ def test_assemble_trace_reports_malformed_judgment_without_traceback(tmp_path, c
     )
     assert rc == 1 and not out.exists()
     assert "error:" in capsys.readouterr().err
+
+
+def test_validate_trace_fails_on_a_directory_without_json_files(tmp_path, capsys):
+    assert cli.validate_trace([str(tmp_path)]) == 1
+    assert "no JSON files" in capsys.readouterr().err
+
+
+def test_assemble_trace_refuses_an_output_name_that_differs_from_case_id(tmp_path, capsys):
+    trace = load_trace("0001")
+    files = _write_inputs(tmp_path, trace)
+    out = tmp_path / "other.json"
+    rc = cli.assemble_trace(
+        ["--case", str(files["case"]), "--core-raw", str(files["raw"]),
+         "--judgment", str(files["judgment"]), "--out", str(out)]
+    )
+    assert rc == 1 and not out.exists()
+    assert "case_id" in capsys.readouterr().err

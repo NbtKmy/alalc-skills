@@ -235,3 +235,28 @@ def test_assemble_observation_only_overwrites_pending_records(tmp_path, capsys):
     rc, _ = assemble(tmp_path, out=out)
     assert rc == 1 and out.read_bytes() == before
     assert "not a pending record" in capsys.readouterr().err
+
+
+def test_validate_record_files_fails_on_a_directory_without_json_files(tmp_path, capsys):
+    assert cli.validate_record_files([str(tmp_path)]) == 1
+    assert "no JSON files" in capsys.readouterr().err
+
+
+def test_list_pending_skips_files_whose_name_differs_from_case_id(tmp_path, capsys):
+    write(tmp_path / "B20261009-002-0001.json", make_record("0001"))
+    write(tmp_path / "copy of 0001.json", make_record("0001"))
+    assert cli.list_pending([str(tmp_path)]) == 0
+    captured = capsys.readouterr()
+    assert captured.out.strip().splitlines() == [
+        f"B20261009-002-0001\t{tmp_path / 'B20261009-002-0001.json'}"
+    ]
+    assert "copy of 0001.json" in captured.err
+
+
+def test_assemble_observation_reports_a_lone_surrogate_without_traceback(tmp_path, capsys):
+    obs = tmp_path / "observation.json"
+    obs.write_text('{"decisions": "\\ud800"}', encoding="utf-8")
+    out = tmp_path / "observed" / f"{CASE_0001}.json"
+    rc = cli.assemble_observation(["--trace", str(TRACE_0001), "--observation", str(obs), "--out", str(out)])
+    assert rc == 1 and not out.exists()
+    assert "error:" in capsys.readouterr().err

@@ -35,3 +35,27 @@ def test_collect_json_files_expands_directories_sorted(tmp_path):
     single = tmp_path / "b.json"
     files = jsonio.collect_json_files([str(tmp_path), str(single)])
     assert [p.name for p in files] == ["a.json", "b.json", "b.json"]
+
+
+@pytest.mark.parametrize("text", ['{"a": NaN}', '{"a": Infinity}', '{"a": -Infinity}'])
+def test_read_json_rejects_non_finite_numbers(tmp_path, text):
+    path = tmp_path / "a.json"
+    path.write_text(text, encoding="utf-8")
+    with pytest.raises(ValueError):
+        jsonio.read_json(path)
+
+
+def test_read_json_rejects_lone_surrogates(tmp_path):
+    path = tmp_path / "a.json"
+    path.write_text('{"a": "\\ud800"}', encoding="utf-8")
+    with pytest.raises(ValueError):
+        jsonio.read_json(path)
+
+
+def test_write_json_refuses_non_finite_numbers_and_keeps_the_existing_file(tmp_path):
+    path = tmp_path / "a.json"
+    jsonio.write_json(path, {"v": 1})
+    with pytest.raises(ValueError):
+        jsonio.write_json(path, {"v": float("nan")})
+    assert jsonio.read_json(path) == {"v": 1}
+    assert list(tmp_path.glob("*.tmp")) == []

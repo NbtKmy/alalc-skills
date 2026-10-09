@@ -45,8 +45,11 @@ def _load_json(path):
 
 
 def _validate_files(paths: list[str], validate) -> int:
+    files = collect_json_files(paths)
+    if not files:
+        raise CliError("no JSON files found in " + ", ".join(paths))
     failed = 0
-    for path in collect_json_files(paths):
+    for path in files:
         try:
             errors, warnings = validate(read_json(path))
         except (OSError, ValueError) as exc:
@@ -105,6 +108,8 @@ def assemble_trace(argv: list[str] | None = None) -> int:
         return 1
 
     out = Path(args.out)
+    if out.stem != trace["case_id"]:
+        raise CliError(f"output file name {out.name} must be {trace['case_id']}.json (the case_id)")
     write_json(out, trace)
     print(f"wrote {out}")
     return 0

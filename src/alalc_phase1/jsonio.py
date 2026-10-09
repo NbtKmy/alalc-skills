@@ -8,8 +8,15 @@ from pathlib import Path
 from typing import Any
 
 
+def _reject_constant(name: str) -> None:
+    raise ValueError(f"non-finite number {name} is not allowed")
+
+
 def read_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
+    """Parse a JSON file. NaN/Infinity and lone surrogates (which cannot be saved as UTF-8) raise ValueError."""
+    obj = json.loads(path.read_text(encoding="utf-8"), parse_constant=_reject_constant)
+    json.dumps(obj, ensure_ascii=False).encode("utf-8")
+    return obj
 
 
 def write_json(path: Path, obj: Any) -> None:
@@ -17,7 +24,7 @@ def write_json(path: Path, obj: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(path.name + ".tmp")
     try:
-        tmp.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        tmp.write_text(json.dumps(obj, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
         os.replace(tmp, path)
     finally:
         tmp.unlink(missing_ok=True)

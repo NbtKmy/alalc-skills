@@ -198,8 +198,11 @@ def _check_human_review(hr: Any, where: str, trace: dict, trace_ids: list[str]) 
         elif verdict == "corrected":
             if not (isinstance(corrected, str) and corrected.strip()):
                 errors.append(f"{where}: corrected_output is required when case_verdict is corrected")
-            elif corrected == proposed:
-                errors.append(f"{where}: corrected_output must differ from alalc_result.proposed_output")
+            elif corrected.strip() == (proposed.strip() if isinstance(proposed, str) else proposed):
+                errors.append(
+                    f"{where}: corrected_output must differ from alalc_result.proposed_output "
+                    "(leading and trailing whitespace does not count)"
+                )
 
     if "decision_overrides" in hr:
         overrides = hr["decision_overrides"]
@@ -382,9 +385,10 @@ def apply_review(
 
 
 def list_pending(directory: Path) -> tuple[list[tuple[str, Path]], list[tuple[Path, str]]]:
-    """Pending records under directory in case_id order, plus (path, reason) for skipped files."""
+    """Pending records under directory in case_id order (a repeated case_id is skipped), plus (path, reason) for skipped files."""
     pending: list[tuple[str, Path]] = []
     skipped: list[tuple[Path, str]] = []
+    first_seen: dict[str, Path] = {}
     for path in sorted(Path(directory).glob("*.json")):
         try:
             record = read_json(path)
@@ -394,7 +398,13 @@ def list_pending(directory: Path) -> tuple[list[tuple[str, Path]], list[tuple[Pa
         errors, _ = validate_record(record)
         if errors:
             skipped.append((path, errors[0]))
-        elif record["status"] == "pending":
-            pending.append((record["case_id"], path))
+            continue
+        case_id = record["case_id"]
+        if case_id in first_seen:
+            skipped.append((path, f"duplicate case_id {case_id} (first seen in {first_seen[case_id].name})"))
+            continue
+        first_seen[case_id] = path
+        if record["status"] == "pending":
+            pending.append((case_id, path))
     pending.sort(key=lambda item: item[0])
     return pending, skipped

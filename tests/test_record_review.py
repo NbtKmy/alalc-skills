@@ -56,6 +56,7 @@ ERROR_CASES = [
     ("corrected_without_output", dict(case_verdict="corrected", corrected_output=None), "corrected_output"),
     ("corrected_empty_output", dict(case_verdict="corrected", corrected_output=""), "corrected_output"),
     ("corrected_same_as_proposal", dict(case_verdict="corrected", corrected_output=PROPOSED), "corrected_output"),
+    ("corrected_differs_only_by_edge_whitespace", dict(case_verdict="corrected", corrected_output=f" {PROPOSED}\n"), "corrected_output"),
     ("override_unknown_decision", dict(decision_overrides=[{"decision_id": "d99"}]), "d99"),
     ("override_duplicate", dict(decision_overrides=[{"decision_id": "d1"}, {"decision_id": "d1"}]), "duplicate"),
     ("override_without_id", dict(decision_overrides=[{"decision_correct": False}]), "decision_id"),
