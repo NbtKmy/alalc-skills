@@ -20,3 +20,30 @@ def load_json(path):
 def load_trace(suffix: str) -> dict:
     """Load an example trace by case suffix, e.g. '0001'."""
     return load_json(BATCH / "romanized" / f"B20261009-002-{suffix}.json")
+
+
+from alalc_phase1.record import build_record  # noqa: E402
+
+
+def observation_decision(decision_id: str, **overrides) -> dict:
+    decision = {
+        "decision_id": decision_id,
+        "automation_class": "table_driven",
+        "candidate_layer": "lookup_table",
+        "required_information": ["input.text"],
+        "core_information_sufficient": False,
+        "external_reference_needed": False,
+        "automation_notes": "fixture",
+        "open_questions": [],
+    }
+    decision.update(overrides)
+    return decision
+
+
+def make_observation(trace: dict) -> dict:
+    return {"decisions": [observation_decision(d["decision_id"]) for d in trace["decisions"]]}
+
+
+def make_record(suffix: str = "0001") -> dict:
+    trace = load_trace(suffix)
+    return build_record(trace, make_observation(trace))
