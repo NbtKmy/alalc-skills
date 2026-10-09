@@ -35,10 +35,16 @@ If `ALALC_HOME` is unset, stop and ask the user to set it. Every command runs as
 
 3. **Present one record at a time**: the input text and `kind`, the core output, the ALA-LC proposal, the variants, each decision with its seven observation fields, and the unresolved points. Show the data as it is.
 
-4. **Ask one question at a time.**
-   - First: is the ALA-LC proposal `accepted` or does it need to be `corrected`?
-   - If `corrected`, ask in turn: the corrected output; which decisions they disagree with and, for each, whether the decision is correct, the corrected result, any change to the observation fields, and a comment; any issues the AI missed (target text and note); a general comment.
-   - Decisions the user does not mention count as agreed.
+4. **Ask the questions in the order below, one at a time.** See "How to ask" for the wording rules.
+   1. *Verdict:* is the ALA-LC proposal correct as a whole? Options: `accepted` / `corrected`.
+   2. If `corrected`, ask for the corrected output (free text).
+   3. For **every** decision in the record, one by one, in `decision_id` order, ask two separate questions:
+      - *Romanization:* is this decision correct? Options: correct / not correct. If not correct, ask for the corrected result (`corrected_after`) and an optional comment.
+      - *Automation observation:* is its automation assessment (the seven fields) right? Options: right / needs a change. If it needs a change, ask which fields change and to what.
+   4. *Missed issues:* is there anything the AI should have recorded as a decision but did not? If yes, ask for the target text and a note, and repeat until the user says no.
+   5. *General comment* (optional, may be empty).
+
+   Write a `decision_overrides` entry only for a decision where the user answered "not correct" or "needs a change". A decision where both answers were "correct" / "right" gets no entry; that is how agreement is recorded. Never infer agreement or disagreement from an unanswered question or an unchecked box; ask.
 
 5. **Write `review.json`** (a scratch file) by copying the user's answers as they gave them. Do not complete, paraphrase or improve them. Do not include `reviewed_at`; the command adds it.
 
@@ -63,7 +69,9 @@ If `ALALC_HOME` is unset, stop and ask the user to set it. Every command runs as
 
    For `accepted`, give only `reviewer` and `case_verdict`. `corrected_output` must be null for `accepted` and must differ from the proposal for `corrected`. In `decision_overrides`, only `decision_id` is required; `observation` may hold just the fields that change.
 
-6. **Save.**
+6. **Confirm, then save.** Before saving, read the whole review back in plain language (verdict, corrected output, each decision marked correct or not, observation changes, missed issues, comment) and ask "この内容で保存してよいですか？ / Save this?". Save only after a yes. If the user wants a change, fix `review.json` and read it back again.
+
+7. **Save.**
 
    ```bash
    uv run --project "$ALALC_HOME" alalc-apply-review --record observed/<case_id>.json --review review.json
@@ -71,7 +79,16 @@ If `ALALC_HOME` is unset, stop and ask the user to set it. Every command runs as
 
    The command adds `reviewed_at`, validates, sets `status: reviewed` and writes the record. On failure nothing is written: show the user the error and fix `review.json` with them.
 
-7. **Continue or stop.** The user may stop at any time. Remaining records stay `pending` and are picked up next time.
+8. **Continue or stop.** The user may stop at any time. Remaining records stay `pending` and are picked up next time.
+
+## How to ask
+
+- Use the user's language (Japanese if they write Japanese).
+- One decision and one question at a time. Show the decision's `before` → `after`, `reason` and cited rules next to the question.
+- Use positive, single-choice questions ("この判断は正しいですか？ 正しい / 正しくない"). Do **not** ask "check the box if you disagree" or "no check means you agree".
+- Do not use multi-select questions where the meaning of an answer depends on which other options are selected or left empty. Only use multi-select for picking fields to change (step 3, second question), and say plainly what each selected item will do.
+- If an answer seems contradictory or unclear, do not stop and do not guess. Ask one short clarifying question about that single point, quoting the user's own words.
+- The user's reasons belong in `comment` (decision level or general), in their own words.
 
 ## Re-reviewing
 
