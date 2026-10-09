@@ -66,6 +66,8 @@ uv sync
 uv run pytest
 ```
 
+`japanese-romanization-core` は `pyproject.toml` で特定コミットに固定しています（Git 直接参照）。更新するときはそのコミットを書き換えて `uv lock` を実行してください。この参照があるため、そのままでは PyPI には公開できません。クローンして使ってください。
+
 ## ライセンス
 
 コードと独自の文章: MIT（`LICENSE`）。`rules/`: 対象外（[NOTICE.md](NOTICE.md) を参照）。利用者が作るデータ（`phase1/`）はこのリポジトリに含まれません。

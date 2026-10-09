@@ -66,6 +66,8 @@ uv sync
 uv run pytest
 ```
 
+`japanese-romanization-core` is pinned to a commit in `pyproject.toml` (a direct Git reference), so updating it means changing that commit and running `uv lock`. Because of this reference the package is not meant for PyPI as it is; use it from a clone.
+
 ## License
 
 Code and original text: MIT (`LICENSE`). Rule files: not covered, see [NOTICE.md](NOTICE.md). Data you produce (`phase1/`) is not part of this repository.
