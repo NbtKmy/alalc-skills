@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.tmp
+.superpowers/
+# local UniDic copies and working data are never published
+unidic-*/
+phase1/
+.tmp/

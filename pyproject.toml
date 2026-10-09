@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "alalc-skills"
+version = "0.1.0"
+description = "Claude Code skills and tools for ALA-LC Japanese romanization: romanize, observe, review"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.13"
+dependencies = ["japanese-romanization-core"]
+
+[project.scripts]
+alalc-run-core = "alalc_phase1.cli:run_core"
+alalc-assemble-trace = "alalc_phase1.cli:assemble_trace"
+alalc-validate-trace = "alalc_phase1.cli:validate_trace"
+alalc-assemble-observation = "alalc_phase1.cli:assemble_observation"
+alalc-validate-record = "alalc_phase1.cli:validate_record_files"
+alalc-list-pending = "alalc_phase1.cli:list_pending"
+alalc-apply-review = "alalc_phase1.cli:apply_review"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/alalc_phase1"]
+
+[tool.uv.sources]
+japanese-romanization-core = { git = "https://github.com/NbtKmy/japanese-romanization-core" }
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["tests"]
