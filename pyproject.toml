@@ -10,7 +10,9 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.13"
-dependencies = ["japanese-romanization-core"]
+dependencies = [
+    "japanese-romanization-core @ git+https://github.com/NbtKmy/japanese-romanization-core@19820b080e0634bc18d2adb05328a9e656e36527",
+]
 
 [project.scripts]
 alalc-run-core = "alalc_phase1.cli:run_core"
@@ -24,8 +26,8 @@ alalc-apply-review = "alalc_phase1.cli:apply_review"
 [tool.hatch.build.targets.wheel]
 packages = ["src/alalc_phase1"]
 
-[tool.uv.sources]
-japanese-romanization-core = { git = "https://github.com/NbtKmy/japanese-romanization-core" }
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [dependency-groups]
 dev = ["pytest>=8"]

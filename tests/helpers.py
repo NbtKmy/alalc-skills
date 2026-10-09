@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 from pathlib import Path
 
@@ -47,3 +48,24 @@ def make_observation(trace: dict) -> dict:
 def make_record(suffix: str = "0001") -> dict:
     trace = load_trace(suffix)
     return build_record(trace, make_observation(trace))
+
+
+def good_review(**overrides) -> dict:
+    review = {
+        "reviewer": "tester",
+        "reviewed_at": "2026-10-09T01:30:00+09:00",
+        "case_verdict": "accepted",
+        "corrected_output": None,
+        "decision_overrides": [],
+        "missed_issues": [],
+        "comment": None,
+    }
+    review.update(overrides)
+    return review
+
+
+def reviewed(record: dict, human_review) -> dict:
+    out = copy.deepcopy(record)
+    out["status"] = "reviewed"
+    out["human_review"] = human_review
+    return out

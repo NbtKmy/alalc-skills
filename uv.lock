@@ -16,7 +16,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "japanese-romanization-core", git = "https://github.com/NbtKmy/japanese-romanization-core" }]
+requires-dist = [{ name = "japanese-romanization-core", git = "https://github.com/NbtKmy/japanese-romanization-core?rev=19820b080e0634bc18d2adb05328a9e656e36527" }]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=8" }]
@@ -42,7 +42,7 @@ wheels = [
 [[package]]
 name = "japanese-romanization-core"
 version = "0.1.0"
-source = { git = "https://github.com/NbtKmy/japanese-romanization-core#19820b080e0634bc18d2adb05328a9e656e36527" }
+source = { git = "https://github.com/NbtKmy/japanese-romanization-core?rev=19820b080e0634bc18d2adb05328a9e656e36527#19820b080e0634bc18d2adb05328a9e656e36527" }
 dependencies = [
     { name = "mecab-python3" },
 ]

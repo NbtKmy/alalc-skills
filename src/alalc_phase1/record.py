@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from datetime import datetime
 from typing import Any
 
 from alalc_phase1.trace import validate_safe
@@ -111,6 +112,126 @@ def _consistency_warnings(decision_id: str, d: dict) -> list[str]:
     return warnings
 
 
+_REVIEW_KEYS = (
+    "reviewer",
+    "reviewed_at",
+    "case_verdict",
+    "corrected_output",
+    "decision_overrides",
+    "missed_issues",
+    "comment",
+)
+_OVERRIDE_KEYS = ("decision_id", "decision_correct", "corrected_after", "observation", "comment")
+
+
+def _is_text_or_none(value: Any) -> bool:
+    return value is None or isinstance(value, str)
+
+
+def _check_override(o: Any, where: str, trace_ids: list[str], verdict: Any) -> tuple[list[str], list[str]]:
+    if not isinstance(o, dict):
+        return [f"{where}: not an object"], []
+    errors: list[str] = []
+    warnings: list[str] = []
+    did = o.get("decision_id")
+    if not isinstance(did, str):
+        errors.append(f"{where}: missing decision_id")
+    elif did not in trace_ids:
+        errors.append(f"{where}: decision_id {did} is not in the trace")
+    if "decision_correct" in o and not isinstance(o["decision_correct"], bool):
+        errors.append(f"{where}: decision_correct must be true or false")
+    if "corrected_after" in o and not _is_text_or_none(o["corrected_after"]):
+        errors.append(f"{where}: corrected_after must be a string or null")
+    if "comment" in o and not _is_text_or_none(o["comment"]):
+        errors.append(f"{where}: comment must be a string or null")
+    if "observation" in o:
+        obs_errors, obs_warnings = _check_observation_fields(
+            o["observation"], f"{where}.observation", partial=True
+        )
+        errors += obs_errors
+        warnings += obs_warnings
+    for key in o:
+        if key not in _OVERRIDE_KEYS:
+            warnings.append(f"{where}: unknown key {key!r}")
+    if verdict == "accepted" and o.get("decision_correct") is False:
+        warnings.append(f"{where}: case_verdict is accepted but {did} is marked decision_correct=false")
+    return errors, warnings
+
+
+def _check_human_review(hr: Any, where: str, trace: dict, trace_ids: list[str]) -> tuple[list[str], list[str]]:
+    if not isinstance(hr, dict):
+        return [f"{where}: not an object"], []
+    errors: list[str] = []
+    warnings: list[str] = []
+    for key in _REVIEW_KEYS:
+        if key not in hr:
+            errors.append(f"{where}: missing {key}")
+    for key in hr:
+        if key not in _REVIEW_KEYS:
+            warnings.append(f"{where}: unknown key {key!r}")
+
+    reviewer = hr.get("reviewer")
+    if "reviewer" in hr and not (isinstance(reviewer, str) and reviewer.strip()):
+        errors.append(f"{where}: reviewer must be a non-blank string")
+
+    if "reviewed_at" in hr:
+        try:
+            parsed = datetime.fromisoformat(hr["reviewed_at"])
+        except (TypeError, ValueError):
+            errors.append(f"{where}: reviewed_at must be an ISO 8601 timestamp, got {hr['reviewed_at']!r}")
+        else:
+            if parsed.tzinfo is None:
+                errors.append(f"{where}: reviewed_at must include a UTC offset, got {hr['reviewed_at']!r}")
+
+    verdict = hr.get("case_verdict")
+    if "case_verdict" in hr and verdict not in CASE_VERDICTS:
+        errors.append(f"{where}: case_verdict must be one of {list(CASE_VERDICTS)}, got {verdict!r}")
+    if "corrected_output" in hr:
+        corrected = hr["corrected_output"]
+        alalc_result = trace.get("alalc_result")
+        proposed = alalc_result.get("proposed_output") if isinstance(alalc_result, dict) else None
+        if verdict == "accepted" and corrected is not None:
+            errors.append(f"{where}: corrected_output must be null when case_verdict is accepted")
+        elif verdict == "corrected":
+            if not (isinstance(corrected, str) and corrected.strip()):
+                errors.append(f"{where}: corrected_output is required when case_verdict is corrected")
+            elif corrected == proposed:
+                errors.append(f"{where}: corrected_output must differ from alalc_result.proposed_output")
+
+    if "decision_overrides" in hr:
+        overrides = hr["decision_overrides"]
+        if not isinstance(overrides, list):
+            errors.append(f"{where}: decision_overrides must be a list")
+        else:
+            seen: list[str] = []
+            for i, o in enumerate(overrides):
+                o_errors, o_warnings = _check_override(o, f"{where}.decision_overrides[{i}]", trace_ids, verdict)
+                errors += o_errors
+                warnings += o_warnings
+                did = o.get("decision_id") if isinstance(o, dict) else None
+                if isinstance(did, str):
+                    if did in seen:
+                        errors.append(f"{where}.decision_overrides[{i}]: duplicate decision_id {did}")
+                    seen.append(did)
+
+    if "missed_issues" in hr:
+        issues = hr["missed_issues"]
+        if not isinstance(issues, list):
+            errors.append(f"{where}: missed_issues must be a list")
+        else:
+            for i, issue in enumerate(issues):
+                if not (
+                    isinstance(issue, dict)
+                    and isinstance(issue.get("target_text"), str)
+                    and isinstance(issue.get("note"), str)
+                ):
+                    errors.append(f"{where}.missed_issues[{i}]: needs string target_text and note")
+
+    if "comment" in hr and not _is_text_or_none(hr["comment"]):
+        errors.append(f"{where}: comment must be a string or null")
+    return errors, warnings
+
+
 def validate_record(record: Any) -> tuple[list[str], list[str]]:
     if not isinstance(record, dict):
         return ["record is not a JSON object"], []
@@ -151,6 +272,25 @@ def validate_record(record: Any) -> tuple[list[str], list[str]]:
         for d in (trace_decisions if isinstance(trace_decisions, list) else [])
         if isinstance(d, dict) and isinstance(d.get("decision_id"), str)
     ]
+
+    if status == "reviewed" and human_review is not None:
+        r_errors, r_warnings = _check_human_review(human_review, "human_review", trace, trace_ids)
+        errors += r_errors
+        warnings += r_warnings
+
+    if "human_review_history" in record:
+        history = record["human_review_history"]
+        if status != "reviewed":
+            errors.append("human_review_history is only allowed when status is reviewed")
+        if not isinstance(history, list):
+            errors.append("human_review_history must be a list")
+        else:
+            for i, past in enumerate(history):
+                h_errors, h_warnings = _check_human_review(
+                    past, f"human_review_history[{i}]", trace, trace_ids
+                )
+                errors += h_errors
+                warnings += h_warnings
 
     observation = record.get("observation")
     if not isinstance(observation, dict) or not isinstance(observation.get("decisions"), list):
