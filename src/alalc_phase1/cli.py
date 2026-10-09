@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 import functools
+import json
+import os
 import sys
 from pathlib import Path
 
@@ -97,4 +99,41 @@ def assemble_trace(argv: list[str] | None = None) -> int:
     out = Path(args.out)
     write_json(out, trace)
     print(f"wrote {out}")
+    return 0
+
+
+@_command
+def run_core(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        prog="alalc-run-core",
+        description="Run japanese-romanization-core for one input and print its raw JSON.",
+    )
+    parser.add_argument("--text", required=True, help="Exact Japanese input text")
+    parser.add_argument(
+        "--dictionary-path",
+        default=os.environ.get("UNIDIC_PATH"),
+        help="UniDic dictionary path (or set UNIDIC_PATH)",
+    )
+    parser.add_argument(
+        "--dictionary-version",
+        default=os.environ.get("UNIDIC_VERSION"),
+        help="UniDic dictionary version (or set UNIDIC_VERSION)",
+    )
+    parser.add_argument(
+        "--dictionary-name",
+        default=os.environ.get("UNIDIC_NAME"),
+        help="Optional dictionary name, e.g. unidic-cwj (or set UNIDIC_NAME)",
+    )
+    args = parser.parse_args(argv)
+    if not args.dictionary_path:
+        raise CliError("Missing UniDic path: use --dictionary-path or UNIDIC_PATH")
+    if not args.dictionary_version:
+        raise CliError("Missing UniDic version: use --dictionary-version or UNIDIC_VERSION")
+
+    from alalc_phase1 import core_runner  # needs MeCab, so imported only when this command runs
+
+    result = core_runner.run_core(
+        args.text, args.dictionary_path, args.dictionary_version, args.dictionary_name
+    )
+    print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
