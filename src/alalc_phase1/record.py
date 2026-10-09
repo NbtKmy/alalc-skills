@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
+from alalc_phase1.jsonio import read_json
 from alalc_phase1.trace import validate_safe
 
 RECORD_VERSION = "alalc-phase1-observation/0.1.0"
@@ -329,3 +332,69 @@ def validate_record(record: Any) -> tuple[list[str], list[str]]:
         errors.append(f"observation has decision_id {did} that is not in the trace")
 
     return errors, warnings
+
+
+class ReviewError(ValueError):
+    """The review could not be applied. The message holds one problem per line."""
+
+
+def apply_review(
+    record: dict,
+    review: dict,
+    *,
+    replace: bool = False,
+    now: datetime | None = None,
+) -> tuple[dict, list[str]]:
+    """Return a new reviewed record and its warnings. The input record is not modified."""
+    if not isinstance(review, dict):
+        raise ReviewError("review is not a JSON object")
+    if "reviewed_at" in review:
+        raise ReviewError("review must not contain reviewed_at; it is set automatically")
+
+    errors, _ = validate_record(record)
+    if errors:
+        raise ReviewError("\n".join(errors))
+
+    updated = copy.deepcopy(record)
+    if updated["status"] == "reviewed":
+        if not replace:
+            raise ReviewError("record is already reviewed; use --replace to re-review it")
+        updated.setdefault("human_review_history", []).append(updated["human_review"])
+
+    when = (now or datetime.now().astimezone()).isoformat(timespec="seconds")
+    human_review = {
+        "reviewer": review.get("reviewer"),
+        "reviewed_at": when,
+        "case_verdict": review.get("case_verdict"),
+        "corrected_output": None,
+        "decision_overrides": [],
+        "missed_issues": [],
+        "comment": None,
+    }
+    human_review.update({k: v for k, v in review.items() if k not in ("reviewer", "case_verdict")})
+    updated["human_review"] = human_review
+    updated["status"] = "reviewed"
+
+    errors, warnings = validate_record(updated)
+    if errors:
+        raise ReviewError("\n".join(errors))
+    return updated, warnings
+
+
+def list_pending(directory: Path) -> tuple[list[tuple[str, Path]], list[tuple[Path, str]]]:
+    """Pending records under directory in case_id order, plus (path, reason) for skipped files."""
+    pending: list[tuple[str, Path]] = []
+    skipped: list[tuple[Path, str]] = []
+    for path in sorted(Path(directory).glob("*.json")):
+        try:
+            record = read_json(path)
+        except (OSError, ValueError) as exc:
+            skipped.append((path, f"cannot read: {exc}"))
+            continue
+        errors, _ = validate_record(record)
+        if errors:
+            skipped.append((path, errors[0]))
+        elif record["status"] == "pending":
+            pending.append((record["case_id"], path))
+    pending.sort(key=lambda item: item[0])
+    return pending, skipped
