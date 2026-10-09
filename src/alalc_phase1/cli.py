@@ -10,6 +10,13 @@ import sys
 from pathlib import Path
 
 from alalc_phase1.jsonio import collect_json_files, read_json, write_json
+from alalc_phase1.record import (
+    ReviewError,
+    apply_review as apply_review_to_record,
+    build_record,
+    list_pending as list_pending_records,
+    validate_record,
+)
 from alalc_phase1.trace import build_trace, validate_safe
 
 
@@ -136,4 +143,105 @@ def run_core(argv: list[str] | None = None) -> int:
         args.text, args.dictionary_path, args.dictionary_version, args.dictionary_name
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0
+
+
+def _print_messages(errors: list[str], warnings: list[str]) -> None:
+    for msg in warnings:
+        print(f"warn:  {msg}", file=sys.stderr)
+    for msg in errors:
+        print(f"error: {msg}", file=sys.stderr)
+
+
+@_command
+def assemble_observation(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        prog="alalc-assemble-observation",
+        description="Embed a trace and an observation into a pending Phase1Observation record.",
+    )
+    parser.add_argument("--trace", required=True, help="Trace JSON (romanized/<case_id>.json)")
+    parser.add_argument("--observation", required=True, help='JSON of the form {"decisions": [...]}')
+    parser.add_argument("--out", required=True, help="Record output path (observed/<case_id>.json)")
+    args = parser.parse_args(argv)
+
+    trace = _load_json(args.trace)
+    observation = _load_json(args.observation)
+
+    trace_errors, _ = validate_safe(trace)
+    if trace_errors:
+        _print_messages([f"trace: {m}" for m in trace_errors], [])
+        return 1
+
+    record = build_record(trace, observation)
+    errors, warnings = validate_record(record)
+    _print_messages(errors, warnings)
+    if errors:
+        return 1
+
+    out = Path(args.out)
+    if out.stem != record["case_id"]:
+        raise CliError(f"output file name {out.name} must be {record['case_id']}.json (the case_id)")
+    if out.exists():
+        existing = _load_json(out)
+        if isinstance(existing, dict) and existing.get("status") == "reviewed":
+            raise CliError(f"{out} is already reviewed; refusing to overwrite it")
+    write_json(out, record)
+    print(f"wrote {out}")
+    return 0
+
+
+@_command
+def validate_record_files(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        prog="alalc-validate-record", description="Validate Phase1Observation records."
+    )
+    parser.add_argument("paths", nargs="+", help="Record JSON files or directories")
+    args = parser.parse_args(argv)
+    return _validate_files(args.paths, validate_record)
+
+
+@_command
+def list_pending(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        prog="alalc-list-pending",
+        description="List pending records as '<case_id><TAB><path>' in case_id order.",
+    )
+    parser.add_argument("observed_dir", help="Directory of observed/<case_id>.json records")
+    args = parser.parse_args(argv)
+    directory = Path(args.observed_dir)
+    if not directory.is_dir():
+        raise CliError(f"{directory} is not a directory")
+    pending, skipped = list_pending_records(directory)
+    for path, reason in skipped:
+        print(f"skip: {path}: {reason}", file=sys.stderr)
+    for case_id, path in pending:
+        print(f"{case_id}\t{path}")
+    return 0
+
+
+@_command
+def apply_review(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        prog="alalc-apply-review",
+        description="Add a human review to a record, validate it and save it.",
+    )
+    parser.add_argument("--record", required=True, help="Record JSON (observed/<case_id>.json)")
+    parser.add_argument("--review", required=True, help="Review JSON (human_review without reviewed_at)")
+    parser.add_argument(
+        "--replace",
+        action="store_true",
+        help="Re-review an already reviewed record; the previous review moves to human_review_history",
+    )
+    args = parser.parse_args(argv)
+
+    record = _load_json(args.record)
+    review = _load_json(args.review)
+    try:
+        updated, warnings = apply_review_to_record(record, review, replace=args.replace)
+    except ReviewError as exc:
+        _print_messages(str(exc).splitlines(), [])
+        return 1
+    _print_messages([], warnings)
+    write_json(Path(args.record), updated)
+    print(f"wrote {args.record}")
     return 0
