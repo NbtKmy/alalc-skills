@@ -87,3 +87,17 @@ def test_each_skill_has_matching_frontmatter():
         front = text.split("---\n")[1]
         assert f"name: {skill.parent.name}\n" in front, skill
         assert "description:" in front, skill
+
+
+def test_notice_and_readmes_state_the_rules_disclaimer():
+    notice = (ROOT / "NOTICE.md").read_text(encoding="utf-8")
+    for needle in ("ALA-LC Romanization Table: Japanese", "2022", "https://www.loc.gov/catdir/cpso/roman.html",
+                   "not covered by the MIT", "withdrawn"):
+        assert needle in notice, needle
+    en = (ROOT / "README.md").read_text(encoding="utf-8")
+    ja = (ROOT / "README.ja.md").read_text(encoding="utf-8")
+    assert "NOTICE.md" in en and "NOTICE.md" in ja
+    assert "unofficial" in en.lower() and "非公式" in ja
+    for text in (en, ja):
+        for step in ("uv sync", "ALALC_HOME", "UNIDIC_PATH", "alalc-observe", "alalc-review"):
+            assert step in text, step
