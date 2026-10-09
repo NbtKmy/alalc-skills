@@ -48,3 +48,19 @@ def test_build_trace_reproduces_example(suffix):
     }
     rebuilt = build_trace(case, raw, judgment, trace["core_result"].get("reading_raw"))
     assert rebuilt == trace
+
+
+@pytest.mark.parametrize("bad_id", [1, None, "", "   ", ["d1"]])
+def test_non_string_or_blank_decision_id_is_an_error(bad_id):
+    trace = copy.deepcopy(load_trace("0001"))
+    trace["decisions"][0]["decision_id"] = bad_id
+    errors, _ = validate_safe(trace)
+    assert any("decision_id" in e for e in errors), errors
+
+
+@pytest.mark.parametrize("bad_case_id", [1, None, "", "   ", "a/b", "a\\b"])
+def test_case_id_must_be_a_plain_non_empty_string(bad_case_id):
+    trace = copy.deepcopy(load_trace("0001"))
+    trace["case_id"] = bad_case_id
+    errors, _ = validate_safe(trace)
+    assert any("case_id" in e for e in errors), errors

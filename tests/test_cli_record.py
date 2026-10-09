@@ -206,3 +206,32 @@ def test_apply_review_reports_unreadable_files(tmp_path, capsys):
     review = review_file(tmp_path, {"reviewer": "t", "case_verdict": "accepted"})
     assert cli.apply_review(["--record", str(tmp_path / "missing.json"), "--review", str(review)]) == 1
     assert "cannot read" in capsys.readouterr().err
+
+
+def test_assemble_observation_refuses_a_trace_with_a_non_string_decision_id(tmp_path, capsys):
+    trace = load_trace("0001")
+    trace["decisions"][0]["decision_id"] = 1
+    bad = write(tmp_path / "romanized" / f"{CASE_0001}.json", trace)
+    observation = make_observation(load_trace("0001"))
+    observation["decisions"].pop(0)  # the omitted decision is the one with the odd id
+    rc, out = assemble(tmp_path, observation, trace_path=bad)
+    assert rc == 1 and not out.exists()
+    assert "decision_id" in capsys.readouterr().err
+
+
+def test_assemble_observation_never_overwrites_the_trace_it_reads(tmp_path, capsys):
+    trace_copy = write(tmp_path / "romanized" / f"{CASE_0001}.json", load_trace("0001"))
+    before = trace_copy.read_bytes()
+    rc, _ = assemble(tmp_path, trace_path=trace_copy, out=trace_copy)
+    assert rc == 1
+    assert trace_copy.read_bytes() == before
+    assert "trace" in capsys.readouterr().err
+
+
+def test_assemble_observation_only_overwrites_pending_records(tmp_path, capsys):
+    out = tmp_path / "observed" / f"{CASE_0001}.json"
+    write(out, load_trace("0001"))  # a trace (or any other JSON) is not a pending record
+    before = out.read_bytes()
+    rc, _ = assemble(tmp_path, out=out)
+    assert rc == 1 and out.read_bytes() == before
+    assert "not a pending record" in capsys.readouterr().err

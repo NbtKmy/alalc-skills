@@ -13,6 +13,7 @@ from alalc_phase1.jsonio import collect_json_files, read_json, write_json
 from alalc_phase1.record import (
     ReviewError,
     apply_review as apply_review_to_record,
+    RECORD_VERSION,
     build_record,
     list_pending as list_pending_records,
     validate_record,
@@ -139,9 +140,12 @@ def run_core(argv: list[str] | None = None) -> int:
 
     from alalc_phase1 import core_runner  # needs MeCab, so imported only when this command runs
 
-    result = core_runner.run_core(
-        args.text, args.dictionary_path, args.dictionary_version, args.dictionary_name
-    )
+    try:
+        result = core_runner.run_core(
+            args.text, args.dictionary_path, args.dictionary_version, args.dictionary_name
+        )
+    except Exception as exc:  # the core raises its own exception types (e.g. DictionaryNotFoundError)
+        raise CliError(f"core failed: {type(exc).__name__}: {exc}") from exc
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 
@@ -181,10 +185,18 @@ def assemble_observation(argv: list[str] | None = None) -> int:
     out = Path(args.out)
     if out.stem != record["case_id"]:
         raise CliError(f"output file name {out.name} must be {record['case_id']}.json (the case_id)")
+    if out.resolve() == Path(args.trace).resolve():
+        raise CliError("--out must not be the trace file; observed records go to observed/<case_id>.json")
     if out.exists():
         existing = _load_json(out)
         if isinstance(existing, dict) and existing.get("status") == "reviewed":
             raise CliError(f"{out} is already reviewed; refusing to overwrite it")
+        if not (
+            isinstance(existing, dict)
+            and existing.get("record_version") == RECORD_VERSION
+            and existing.get("status") == "pending"
+        ):
+            raise CliError(f"{out} exists and is not a pending record; refusing to overwrite it")
     write_json(out, record)
     print(f"wrote {out}")
     return 0

@@ -129,9 +129,27 @@ def validate_safe(trace: Any) -> tuple[list[str], list[str]]:
     if not isinstance(trace, dict):
         return ["trace is not a JSON object"], []
     try:
-        return validate(trace)
+        errors, warnings = validate(trace)
     except (KeyError, TypeError, AttributeError, IndexError) as exc:
-        return [f"malformed trace: {type(exc).__name__}: {exc}"], []
+        return [f"malformed trace: {type(exc).__name__}: {exc}"] + _identifier_errors(trace), []
+    errors = errors + _identifier_errors(trace)
+    return errors, warnings
+
+
+def _identifier_errors(trace: dict) -> list[str]:
+    """case_id names the output file and decision_id keys the observation: both must be plain strings."""
+    errors: list[str] = []
+    case_id = trace.get("case_id")
+    if not (isinstance(case_id, str) and case_id.strip()) or "/" in case_id or "\\" in case_id:
+        errors.append(f"case_id must be a non-empty string without path separators, got {case_id!r}")
+    decisions = trace.get("decisions")
+    for i, d in enumerate(decisions if isinstance(decisions, list) else []):
+        if not isinstance(d, dict):
+            continue
+        did = d.get("decision_id")
+        if not (isinstance(did, str) and did.strip()):
+            errors.append(f"decisions[{i}]: decision_id must be a non-empty string, got {did!r}")
+    return errors
 
 
 def build_trace(

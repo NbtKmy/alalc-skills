@@ -50,3 +50,15 @@ def test_real_core_reproduces_the_example_baseline():
         os.environ.get("UNIDIC_NAME"),
     )
     assert raw == trace["core_result"]["raw"]
+
+
+def test_core_failure_is_reported_as_an_error_not_a_traceback(monkeypatch, capsys):
+    def boom(text, path, version, name=None):
+        raise RuntimeError("Dictionary not found: /nonexistent")
+
+    monkeypatch.setattr(core_runner, "run_core", boom)
+    monkeypatch.setenv("UNIDIC_PATH", "/nonexistent")
+    monkeypatch.setenv("UNIDIC_VERSION", "1")
+    assert cli.run_core(["--text", "あ"]) == 1
+    err = capsys.readouterr().err
+    assert "error:" in err and "Dictionary not found" in err
