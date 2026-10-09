@@ -76,3 +76,14 @@ def test_every_command_a_skill_mentions_is_registered():
             if command in names:
                 continue  # skill / project names, not commands
             assert command in scripts, f"{skill.parent.name} mentions unknown command {command}"
+
+
+def test_each_skill_has_matching_frontmatter():
+    skills = sorted((ROOT / "skills").glob("*/SKILL.md"))
+    assert [s.parent.name for s in skills] == ["alalc-observe", "alalc-review", "alalc-romanize"]
+    for skill in skills:
+        text = skill.read_text(encoding="utf-8")
+        assert text.startswith("---\n"), skill
+        front = text.split("---\n")[1]
+        assert f"name: {skill.parent.name}\n" in front, skill
+        assert "description:" in front, skill
